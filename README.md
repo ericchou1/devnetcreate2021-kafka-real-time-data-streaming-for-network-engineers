@@ -4,7 +4,7 @@ DevNet Create 2021 Talk: Kafka Real Time Data Streaming for Network Engineers
 This repository is provided as supplement for Cisco DevNet Create 2021 Talk
 
 ![Cisco DevNet Create 2021](/images/DevNet_Create_2021.png)
-
+![Cisco DevNet Create 2021 Eric Chou Speaker](/images/Eric_Chou_Speaker.png)
 
 ## Useful links: 
 
