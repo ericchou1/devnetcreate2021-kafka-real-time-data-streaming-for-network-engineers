@@ -1,0 +1,121 @@
+*** Background ***
+
+- Apache Kafka Quickstart: 
+https://kafka.apache.org/documentation/#quickstart
+
+- Following Notes are based on Ubuntu 20.04 LTS 
+	- Also check out DigitalOcean's Guide: https://www.digitalocean.com/community/tutorials/how-to-install-apache-kafka-on-ubuntu-20-04 
+
+$ lsb_release -a
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 20.04.3 LTS
+Release:	20.04
+Codename:	focal
+
+*** Steps ***
+
+1. Install Java
+
+$ sudo apt-get install openjdk-8-jdk
+
+$ java -version
+openjdk version "1.8.0_292"
+OpenJDK Runtime Environment (build 1.8.0_292-8u292-b10-0ubuntu1~20.04-b10)
+OpenJDK 64-Bit Server VM (build 25.292-b10, mixed mode)
+
+
+2. Download Kafka binary, untar, unzip  
+
+$ curl -O https://mirrors.ocf.berkeley.edu/apache/kafka/2.8.0/kafka_2.13-2.8.0.tgz
+$ tar -xvf kafka_2.13-2.8.0.tgz
+
+
+3. (Optional) Add bin directory to path
+
+$ cat ~/.bashrc | grep kafka
+export PATH=/home/echou/kafka_2.13-2.8.0/bin:$PATH
+
+
+4. (Optional) Create data directory for Zookeeper and modify Zookeeper configuration
+
+$ cat kafka_2.13-2.8.0/config/zookeeper.properties | grep data
+dataDir=/home/echou/kafka_2.13-2.8.0/data/zookeeper
+
+
+5. (Optional) Create data directory for Kafka and modify Kafka configuration
+
+$ cat kafka_2.13-2.8.0/config/server.properties | grep log.dirs
+log.dirs=/home/echou/kafka_2.13-2.8.0/data/kafka
+
+
+6. (In one session) Start Zookeeper in console 
+
+$ /home/echou/kafka_2.13-2.8.0/bin/zookeeper-server-start.sh /home/echou/kafka_2.13-2.8.0/config/zookeeper.properties
+
+
+7. (In separate session) Start Kafka in console 
+
+$ /home/echou/kafka_2.13-2.8.0/bin/kafka-server-start.sh /home/echou/kafka_2.13-2.8.0/config/server.properties
+
+
+8. Produce first topic with Kafka CLI
+	- Note the partition number of 3 and replication-factor of 1 in testing environment
+
+$ kafka-topics.sh --zookeeper 127.0.0.1:2181 --topic msft_threatIntel --create --partitions 3 --replication-factor 1
+
+
+9. Start Consumer with Kafka CLI
+
+$ kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic first_topic
+
+
+10. Start Producer with Kafka CLI
+
+$ kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --topic first_topic
+
+
+11. (Optional) Create Systemd Unit Files for Zookeeper and Kafka 
+
+$ cat /etc/systemd/system/zookeeper.service
+[Unit]
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+User=echou
+ExecStart=/home/echou/kafka_2.13-2.8.0/bin/zookeeper-server-start.sh /home/echou/kafka_2.13-2.8.0/config/zookeeper.properties
+ExecStop=/home/echou/kafka_2.13-2.8.0/bin/zookeeper-server-stop.sh
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target
+
+$ cat /etc/systemd/system/kafka.service
+[Unit]
+Requires=zookeeper.service
+After=zookeeper.service
+
+[Service]
+Type=simple
+User=echou
+ExecStart=/bin/sh -c '/home/echou/kafka_2.13-2.8.0/bin/kafka-server-start.sh /home/echou/kafka_2.13-2.8.0/config/server.properties > /home/echou/kafka_2.13-2.8.0/kafka.log 2>&1'
+ExecStop=/home/echou/kafka_2.13-2.8.0/bin/kafka-server-stop.sh
+Restart=on-abnormal
+
+[Install]
+WantedBy=multi-user.target
+
+
+12. Start / Stop / Status of Services
+
+$ sudo systemctl [start|stop|status] [zookeeper|kafka]
+
+
+13. (Optional) Automatically start Zookeeper and Kafka 
+
+$ sudo systemctl enable zookeeper
+$ sudo systemctl enable kafka
+
+
