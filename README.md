@@ -32,6 +32,8 @@ In this example, we will use the Kafka console commands to produce and consume m
 
 In this example, we will have multiple consumers in a consumer group as well as produce messages with key-value pairs. 
 
+The key is important for offset sequence and which partition the data will live in. Basically when key=null, data is sent round robin, if the key is set, they will be sent to the same partition and order be guaranteed. The key can be a user, a device, a database id, etc. 
+
 - Click image below for YouTube video
 
 [![DevNet Create 2021 Exampple 2](/images/Example2_screenshot.png)](https://youtu.be/8qL98_7hB_k)
