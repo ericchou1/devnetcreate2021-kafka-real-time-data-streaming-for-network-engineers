@@ -22,11 +22,15 @@ This repository is provided as supplement for Cisco DevNet Create 2021 Talk
 
 ## Example 1: Create Topic and Test
 
+In this example, we will use the Kafka console commands to produce and consume messages. 
+
 - Click image below for YouTube video
 
 [![DevNet Create 2021 Exampple 1](/images/Example1_screenshot.png)](https://youtu.be/8agd1M-vafg)
 
 ## Example 2: Consumer Group and Key-Value Pair in Records
+
+In this example, we will have multiple consumers in a consumer group as well as produce messages with key-value pairs. 
 
 - Click image below for YouTube video
 
@@ -34,11 +38,15 @@ This repository is provided as supplement for Cisco DevNet Create 2021 Talk
 
 ## Example 3: Topic Offsets
 
+In this example, we will take a closer look at the concept of offsets. The offsets are kept a per-topic, per-consumer group level.  
+
 - Click image below for YouTube video
 
 [![DevNet Create 2021 Exampple 3](/images/Example3_screenshot.png)](https://youtu.be/BINK1Aex8Qs)
 
 ## Example 4: Simple Python Library Example
+
+In this example, we will use the confluent-kafka Python library to produce and consume messages. 
 
 - Click image below for YouTube video
 
